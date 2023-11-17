@@ -7,7 +7,7 @@ bodyClass: page-about
 
 I am the student in PKNU.
 
-![Accounting Services](/images/thom-holmes-Lrfw0U_o9I0-unsplash.jpg)
+![Accounting Services](/images/pknu.webp)
 
 # Achieve
 
