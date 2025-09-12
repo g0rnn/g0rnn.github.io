@@ -17,3 +17,8 @@ hola:
   label: Hola
   permalink: /hola
   description: Hola tag description
+
+greetings:
+  label: greetings
+  permalink: /greet
+  description: Greeting tag desc
