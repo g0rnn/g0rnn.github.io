@@ -2,39 +2,21 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
-// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
-
 const config: Config = {
-  title: 'g0rnn\'s Blog',
+  title: "g0rnn's Blog",
   tagline: 'Dinosaurs are cool',
   favicon: 'img/super-capybara-man1.png',
+  future: { v4: true },
 
-  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
-  future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
-  },
-
-  // Set the production url of your site here
   url: 'https://g0rnn.github.io',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'g0rnn', // Usually your GitHub org/user name.
-  projectName: 'g0rnn.github.io', // Usually your repo name.
+  organizationName: 'g0rnn',
+  projectName: 'g0rnn.github.io',
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
-  i18n: {
-    defaultLocale: 'ko',
-    locales: ['en', 'ko'],
-  },
+  i18n: { defaultLocale: 'ko', locales: ['en','ko'] },
 
   presets: [
     [
@@ -42,64 +24,48 @@ const config: Config = {
       {
         docs: false,
         blog: {
-          routeBasePath : '/',
+          routeBasePath: '/',
           showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
+          feedOptions: { type: ['rss','atom'], xslt: true },
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
         },
-        theme: {
-          customCss: './src/css/custom.css',
-        },
+        theme: { customCss: './src/css/custom.css' },
       } satisfies Preset.Options,
     ],
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-ideal-image',
+      { quality: 70, max: 1030, min: 640, steps: 2, disableInDev: false },
+    ],
+    // medium-zoom 플러그인
+    'docusaurus-plugin-image-zoom',
+  ],
+
   themeConfig: {
-    // Replace with your project's social card
     image: 'img/super-capybara-man.png',
     navbar: {
       title: 'gornn',
-      logo: {
-        alt: 'My Site Logo',
-        src: 'img/super-capybara-man.png',
-      },
+      logo: { alt: 'My Site Logo', src: 'img/super-capybara-man.png' },
       items: [
-        {to: '/', label: 'Blog', position: 'left'},
-        {
-          href: 'https://github.com/g0rnn',
-          label: 'GitHub',
-          position: 'right',
-        },
+        { to: '/', label: 'Blog', position: 'left' },
+        { href: 'https://github.com/g0rnn', label: 'GitHub', position: 'right' },
       ],
     },
     footer: {
       style: 'dark',
       links: [
-        {
-          title: 'Community',
-          items: [],
-        },
+        { title: 'Community', items: [] },
         {
           title: 'More',
           items: [
-            {
-              label: 'Blog',
-              to: '/',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/g0rnn',
-            },
+            { label: 'Blog', to: '/' },
+            { label: 'GitHub', href: 'https://github.com/g0rnn' },
           ],
         },
       ],
@@ -108,7 +74,15 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
-      additionalLanguages: ['bash','java','properties']
+      additionalLanguages: ['bash','java','properties'],
+    },
+
+    zoom: {
+      selector: '.markdown :not(em) > img', // 필요 시 좁혀서 사용
+      background: { light: 'rgb(255,255,255)', dark: 'rgb(50,50,50)' },
+      // 아래는 medium-zoom 고유 설정(여백 등)
+      // https://github.com/francoischalifour/medium-zoom#usage
+      config: { margin: 24, scrollOffset: 0 },
     },
   } satisfies Preset.ThemeConfig,
 };

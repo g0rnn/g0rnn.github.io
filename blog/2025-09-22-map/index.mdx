@@ -3,11 +3,16 @@ title: HashMap vs TreeMap
 tags: [Java]
 ---
 
+import Image from '@theme/IdealImage';
+import img1 from './img1.png';
+import img2 from './img2.png';
+import img3 from './img3.png';
+
 > 이 글을 읽은 후엔 HashMap과 TreeMap의 차이를 알고 요구사항에 맞게 더 적절히 사용할 수 있습니다.
 
 <!--truncate-->
 
-![자바 컬렉션](./collection.png)
+<Image img={require('./collection.png')} alt="자바 컬렉션" />
 
 # HashMap
 - 순서없음
@@ -25,21 +30,30 @@ HashMap은 해시 기반의 구현체로서 AbstractMap을 확장하고 Map을 �
 
 말이 너무 어려우니 코드를 한번 살펴보자.
 
-<p align="center">
-  <img src="./img1.png" width="300px" />
-</p>
+```java title="HashMap.java"
+public class HashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> ... {
+    ...
+
+    static class Node<K,V> implements Map.Entry<K,V> {
+        final int hash;
+        final K key;
+        V value;
+        Node<K,V> next;
+    }
+    
+    ...
+    transient Node<K, V>[] table;
+
+}
+```
 
 이 녀석은 내부적으로 `Node<K, V>[] table`이라는 배열을 가지고, 이 배열 안에 HashMap의 모든 데이터가 저장된다. 각 노드에는 다음 노드를 가리키는 참조와 키&값이 존재한다.
 
-<p align="center">
-  <img src="./img2.png" width="600px" />
-</p>
-
 값을 삽입하거나 값에 접근할 때엔 hashCode % capacity로 인덱스를 정해서 그 bucket에 데이터를 넣는다.(실제로는 %연산이 아니라 비트 연산)
 
-<p align="center">
-  <img src="./img3.png" width="600px" />
-</p>
+
+<Image img={img3} size={600} alt="구현 코드 3" />
+
 
 for문을 돌다가 if(p.next == null)이면 p.next에 newNode를 넣는 것이 보이는가? 이것은 충돌이 일어났을 때 해당 버킷의 연결리스트에 append하는 로직이다. 그리고 새로운 값을 넣은 후 어떤 조건을 만족한다면 treeify를 하는데 이건 조금 뒤에서 설명한다.
 
