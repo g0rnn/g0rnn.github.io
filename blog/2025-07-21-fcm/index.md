@@ -1,5 +1,6 @@
 ---
 title: FCM(Firebase Cloud Messaging)을 알고 계신가요
+description: Firebase Cloud Messaging의 개념과 활용법 
 tags: [FCM]
 ---
 
