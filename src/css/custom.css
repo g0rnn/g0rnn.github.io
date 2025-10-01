@@ -28,3 +28,45 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+.bg-yellow {
+  background-color: #fff3b0; /* 부드러운 노랑 */
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.bg-green {
+  background-color: #d0f0c0; /* 파스텔 민트 */
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.bg-blue {
+  background-color: #dbeafe; /* 연한 파랑 */
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.bg-pink {
+  background-color: #ffe4e6; /* 부드러운 핑크 */
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.bg-purple {
+  background-color: #ede9fe; /* 연보라 */
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.bg-orange {
+  background-color: #ffedd5; /* 크림 오렌지 */
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.bg-light-green {
+  background-color: #E6F9E6; /* 크림 오렌지 */
+  padding: 2px 4px;
+  border-radius: 3px;
+}

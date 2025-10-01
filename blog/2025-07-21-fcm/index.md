@@ -1,7 +1,9 @@
 ---
 title: FCM(Firebase Cloud Messaging)을 알고 계신가요
-description: Firebase Cloud Messaging의 개념과 활용법 
+description: Firebase Cloud Messaging의 개념과 활용법
+slug: firebase-fcm-guide
 tags: [FCM]
+keywords: [Firebase, Cloud Messaging, Notification]
 ---
 
 안녕하세요. 전 요즘 선행을 기록하는 [흔적](https://github.com/Warm-Trace/Trace_Backend)에 백엔드로 합류하여 앱 출시를 바라보면서 개발하고 있습니다. 최근에는 알림 탭 기능을 구현하게 되어 관련 작업을 맡고 있습니다. 이 과정에서 FCM(Firebase Cloud Messaging)을 사용한 기능을 개발하며 학습하고 정리한 내용을 공유하고자 합니다.
