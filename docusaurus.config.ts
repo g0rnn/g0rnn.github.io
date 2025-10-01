@@ -45,6 +45,15 @@ const config: Config = {
     ],
     // medium-zoom 플러그인
     'docusaurus-plugin-image-zoom',
+
+    // Google Analytics 4 (GA4)
+    [
+      '@docusaurus/plugin-google-gtag',
+      {
+        trackingID: 'G-XXXXXXX', // ← 여기 GA4 측정 ID 넣기
+        anonymizeIP: true,       // (선택) 사용자 IP 익명화
+      },
+    ],
   ],
 
   scripts: [
