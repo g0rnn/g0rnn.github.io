@@ -50,8 +50,8 @@ const config: Config = {
     [
       '@docusaurus/plugin-google-gtag',
       {
-        trackingID: 'G-XXXXXXX', // ← 여기 GA4 측정 ID 넣기
-        anonymizeIP: true,       // (선택) 사용자 IP 익명화
+        trackingID: 'GTM-PVS84CSG', // ← 여기 GA4 측정 ID 넣기
+        anonymizeIP: false,       // (선택) 사용자 IP 익명화
       },
     ],
   ],
