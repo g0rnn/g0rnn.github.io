@@ -50,32 +50,10 @@ const config: Config = {
     [
       '@docusaurus/plugin-google-gtag',
       {
-        trackingID: 'GTM-PVS84CSG', // ← 여기 GA4 측정 ID 넣기
+        trackingID: 'G-C8J1C26M0C', // ← 여기 GA4 측정 ID 넣기
         anonymizeIP: false,       // (선택) 사용자 IP 익명화
       },
     ],
-  ],
-
-  scripts: [
-    {
-      // GTM 기본 스크립트
-      src: 'https://www.googletagmanager.com/gtm.js?id=GTM-PVS84CSG',
-      async: true,
-    },
-  ],
-
-    headTags: [
-    {
-      tagName: 'script',
-      attributes: {},
-      innerHTML: `
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-PVS84CSG');
-      `,
-    },
   ],
 
   themeConfig: {
