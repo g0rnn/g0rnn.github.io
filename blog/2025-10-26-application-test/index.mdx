@@ -1,0 +1,149 @@
+---
+title: 시간 제한이 있는 테스트 메서드를 알아보자
+description: junit5의 시간 제한 테스트 메서드인 assertTimeOut과 assertTimeoutPreemptively를 설명합니다. 그리고 Scanner가 빈 문자열을 입력받지 못하는 이유를 설명합니다.
+slug: tech-course-application-test
+tags: [Java, JUnit5]
+keywords: [Java, JUnit5]
+---
+import Callout from '@site/src/components/Callout';
+import Image from '@theme/IdealImage';
+import testCode from './test_code.png';
+import error from './error.png';
+import threadName from './threadName.png';
+import threadLifeCycle from './thread_lifecycle.png';
+import nextLine from './nextline.png';
+
+
+> 이 글을 읽은 후엔 시간 제한을 걸어야하는 테스트 메서드 2가지를 적절하게 사용할 수 있습니다.
+
+<figure>
+    <Image img={testCode} size={500} alt="애플리케이션 테스트 코드" />
+</figure>
+
+우테코 프리코스 2주차를 진행하며 자동차 이름을 입력했을 때 예외를 던지는지 확인하기 위해 ApplicationTest에 테스트 코드를 추가해보려고 했다. 
+"", " ", "\n" 등 다양한 입력을 테스트했는데 ""만 테스트에 실패하는 것이다!! `if (names == null || names.isBlank())`로 공백과 빈 문자열을 처리했는데도 예외가 던져지지 않길래 삽질 좀 해봤다..ㅎㅎ;;
+
+## Scanner에서 빈 문자열("") 입력
+사실 `Scanner`는 빈 문자열을 입력받지 못한다. 키보드에서 입력받을 때엔 항상 엔터를 치기 때문에 공백을 입력하더라도 '\n'이 들어온다. 
+
+<figure>
+    <Image img={nextLine} size={500} alt="애플리케이션 테스트 코드" />
+</figure>
+
+`nextLine()`을 디버깅해보면 `findWithinHorizon()`는 `@ValueSource`에서 제공하는 입력인 `""`이 아니라 `null`을 반환해서 `NoSuchElementException`을 던지게 된다.
+
+사진에서 linePattern은 `(?s).*?(\r\n|[\n\r\u2028\u2029\u0085])|.+\z` 이런 정규식으로 컴파일된 패턴이다. 앞부분(`.*?`)은 가능한 가장 짧게 현재 위치부터 줄바꿈 문자를 포함하는 구간까지 매칭하는 것이고, 뒷부분(`|.+\z`)는 EOF 까지라도 남은 텍스트가 있으면 그것을 한 줄로 취하기 위함으로 마지막 줄에 개행없이 끝나는 상황도 지원하겠다는 의미다.
+
+그 외의 next(), nextInt() 등 메서드에서 공백을 입력받지 못하는 이유는 Scanner는 기본적으로 입력을 토큰 단위로 분리해서 읽기 때문이다. 입력 스트림을 읽을 때 공백(스페이스), 텝(\t), 줄바꿈(\n) 등을 구분자로 사용한다. 그래서 입력에 약속한 토큰(개행, 스페이스 등)이 없다면 사용자가 입력한 것을 읽을 수 없게 된다.
+
+그래서 `""`가 입력되는 테스트케이스만 실패했던 것이다. 
+
+### 디버깅 결과
+
+<figure>
+    <Image img={error} size={500} alt="애플리케이션 테스트 코드" />
+</figure>
+
+하지만 당시엔 이를 모르고 디버깅을 열심히 했었다. 근데 자꾸 에러가 뜨는게 아닌가!! 
+
+에러 메시지를 읽어보면 1초가 넘어서 문제가 되는거 같은데.. Scanner객체를 생성할 때 1초가 넘게 걸리나? 아니면 `@ValueSource`로 주어지는 입력은 Scanner에 전달되는데 오래 걸리나? 등 다양한 이론을 세우고 디버깅으로 실험하고 여러 문서를 찾아보았다.
+
+이제 디버깅 시 예외가 발생했던 이유를 설명하려 한다.
+
+## assertTimeoutPreemptively
+우테코에서는 ApplicationTest에 기본적으로 `assertSimpleTest`를 사용한다. 이건 `camp.nextstep.edu.missionutils.test` 패키지에 있는 태스트 클래스로 내부적으로 junit의 `assertTimeoutPreemptively`를 사용한다.
+
+<Callout type="info">
+엥? assertTimeoutPreemptively??
+</Callout>
+`assertTimeoutPreemptively`는 테스트 실행 기간을 제한하고, 제한 시간을 초과하면 즉시 테스트를 중단하는 JUnit 5의 assertion 메서드이다.
+
+```Java title="Basic Usage"
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static java.time.Duration.ofSeconds;
+
+@Test
+void 타임아웃_테스트() {
+    assertTimeoutPreemptively(ofSeconds(2), () -> {
+        // 2초 이내에 완료되어야 하는 코드
+        Thread.sleep(1000);  // 성공
+    });
+}
+
+@Test
+void 타임아웃_초과_테스트() {
+    assertTimeoutPreemptively(ofSeconds(1), () -> {
+        Thread.sleep(2000);  // 1초 후 테스트 즉시 중단!
+    });
+}
+```
+
+첫번째 인자로 제한 시간을 넘기고, 두번째 인자로는 테스트 할 코드를 넣는다. 다른 알고리즘 문제처럼 우테코 missionutils에서도 이 시간을 1초로 제한하고 있다. (앞으로는 시간복잡도에 대해 좀 더 엄격하게 따져봐야겠다.)
+
+JUnit 5에서는 `assertTimeout`과 `assertTimeoutPreemptively`를 시간 제한 검증 메서드로 제공한다. `assertTimeout`은 제한 시간이 지나도 작업이 끝날 때까지 기다리고, 작업 완료 후 실패 처리한다. 그래서 무한루프처럼 시간이 오래걸리는 작업을 중단시킬 수 없다.
+
+반면 `assertTimeoutPreemptively`는 별도의 스레드에서 실행되어 제한 시간이 지나면 즉시 중단된다. 
+
+```java title="Thread Test"
+@Test
+void 자동차_이름_입력_예외() {
+    System.out.println("메인 스레드: " + Thread.currentThread().getName());
+
+    assertTimeoutPreemptively(Duration.ofSeconds(1L), () -> {
+        System.out.println("실행 스레드: " + Thread.currentThread().getName());
+        assertThatThrownBy(() -> runException("\n"))
+                .isInstanceOf(IllegalArgumentException.class);
+    });
+}
+```
+
+<figure>
+    <Image img={threadName} size={400} alt="애플리케이션 테스트 코드" />
+</figure>
+
+### assertTimeoutPreemptively의 시간 측정
+왜 별도의 스레드를 사용할까? 제한 시간이 지나면 즉시 중단하기 위함이다. 
+
+```java title="assertTimeoutPreemptively 내부 동작 요약(Pseudo-Code)"
+public static <T> T assertTimeoutPreemptively(Duration timeout, Executable executable) {
+    // 1. 별도 스레드 생성
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    
+    // 2. 해당 스레드에서 작업 실행
+    Future<T> future = executor.submit(() -> {
+        executable.execute();
+        return result;
+    });
+    
+    try {
+        // 3. 제한 시간만큼만 대기
+        return future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+    } catch (TimeoutException e) {
+        // 4. 시간 초과 시 스레드 강제 종료
+        future.cancel(true);  // interrupt 발생
+        throw new AssertionFailedError("실행 시간 초과");
+    }
+}
+```
+
+각 클래스가 무엇을 의미하는지, 정확히 어떤 기능을 하는지 알아보려면 시간이 오래 걸릴거 같아 흐름만 파악하고 클로드로 코드를 요약해보았다.
+
+`executor`가 시간 제한을 확인해볼 코드이고, `submit()`을 호출하여 별도의 스레드에서 작업을 시작한다. 그리고 `future.get()`으로 작업의 완료를 기다린다. 기다리는 도중 제한 시간이 끝나면 interrupt가 발생하고 작업이 중단된다.
+
+### 디버깅하면 어떻게 될까?
+
+<figure>
+    <Image img={threadLifeCycle} size={500} alt="애플리케이션 테스트 코드" />
+</figure>
+
+디버깅 시 breakpoint에 도달하면 해당 스레드는 정지하게 된다. 그리고 개발자는 자유롭게 코드를 살펴보고 분석할 수 있다. 
+
+하지만 `assertTimeoutPreemptively`를 사용하여 두 개의 스레드가 동작하게 되면 문제가 발생한다. 브레이크 포인트에 도달하여 작업스레드가 멈췄는데도 main 스레드는 시간측정을 계속 하고 있어서 제한시간을 맞추기 까다롭다.
+
+## ApplicationTest를 디버깅하려면
+
+그럼 반드시 디버깅을 해야하는 상황에선 어떻게 해야할까?
+
+시간제한을 잔뜩 늘리거나 `assertTimeout`을 사용하면 된다. assertTimeout은 하나의 스레드에서 동작하기 때문에 브레이크 포인트에 도달하면 타이머도 같이 멈춘다. 그래서 시간 제한이 있는 테스트에서도 문제 없다.
+
+혹은 Step Into(F7), Step Over(F8), Step Out(F9)를 시간 제한 내에 매우 빠르게 누르면 된다. 아마 그러기엔 힘들테니 `assertTimeOut`을 사용하길 바란다.

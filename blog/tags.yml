@@ -1,9 +1,14 @@
 Java:
   label: Java
   permalink: /java
-  description: Java tag description
+  description: Java tag
 
 FCM:
   label: FCM
-  permalink: /FCM
-  description: FCM tag description
+  permalink: /fcm
+  description: FCM tag
+
+JUnit5:
+  label: JUnit5
+  permalink: /junit5
+  description: JUnit5 tag
