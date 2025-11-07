@@ -1,14 +1,44 @@
 Java:
   label: Java
-  permalink: /java
+  permalink: /tags/java
   description: Java tag
 
 FCM:
   label: FCM
-  permalink: /fcm
+  permalink: /tags/fcm
   description: FCM tag
 
 JUnit5:
   label: JUnit5
-  permalink: /junit5
+  permalink: /tags/junit5
   description: JUnit5 tag
+
+Functional Interface:
+  label: Functional Interface
+  permalink: /tags/functional-interface
+  description: Java의 함수형 인터페이스와 람다, 메서드 참조 등 함수형 프로그래밍 개념을 다룹니다.
+
+System Design:
+  label: System Design
+  permalink: /tags/system-design
+  description: 대규모 시스템 설계, 확장성, 트래픽 처리, 데이터베이스 샤딩 등 아키텍처 설계 주제입니다.
+
+Architecture:
+  label: Architecture
+  permalink: /tags/architecture
+  description: 소프트웨어 아키텍처 패턴, 계층 구조, 클린 아키텍처, 도메인 주도 설계 등의 주제를 포함합니다.
+
+Collection:
+  label: Collection
+  permalink: /tags/collection
+  description: Java Collection Framework의 핵심 구조와 List, Set, Queue 등의 내부 동작 원리를 설명합니다.
+
+Map:
+  label: Map
+  permalink: /tags/map
+  description: HashMap, TreeMap, LinkedHashMap 등 키-값 기반 자료구조와 내부 알고리즘을 다룹니다.
+
+Spring Security:
+  label: Spring Security
+  permalink: /tags/spring-security
+  description: Spring Security의 인증, 인가, 필터 체인, OAuth2 로그인 및 JWT 기반 보안 구조를 다룹니다.
