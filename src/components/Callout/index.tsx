@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import styles from "./styles.module.css";  // ✅ CSS Module import
 
-type CalloutType = "default" | "info" | "warning" | "danger" | "success";
+type CalloutType = "default" | "gray" | "info" | "warning" | "danger" | "success";
 
 interface CalloutProps {
   type?: CalloutType;
