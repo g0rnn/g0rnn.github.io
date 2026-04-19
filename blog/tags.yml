@@ -42,3 +42,13 @@ Spring Security:
   label: Spring Security
   permalink: /tags/spring-security
   description: Spring Security의 인증, 인가, 필터 체인, OAuth2 로그인 및 JWT 기반 보안 구조를 다룹니다.
+
+Web:
+  label: Web
+  permalink: /tags/web
+  description: 브라우저, 네트워크, 웹 성능 최적화 등 웹 애플리케이션 개발 주제를 다룹니다.
+
+Image:
+  label: Image
+  permalink: /tags/image
+  description: 이미지 포맷, 렌더링, 압축, CDN, 업로드 처리 등 이미지 관련 기술을 다룹니다.
