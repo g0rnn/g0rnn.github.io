@@ -1,0 +1,60 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Quote from '@/components/Quote.astro';
+import { formatDate, getPosts, tagSlug, type Post } from '@/lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, date, tags, keywords } = post.data;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={title} description={description} keywords={keywords} type="article">
+  <article>
+    <header class="mb-8">
+      <h1 class="mt-0 mb-2">{title}</h1>
+      <div class="flex flex-wrap items-center gap-x-3 text-sm text-muted">
+        <time datetime={formatDate(date)}>{formatDate(date)}</time>
+        {
+          tags.map((tag) => (
+            <a href={`/tags/${tagSlug(tag)}/`} class="text-muted hover:text-link">
+              #{tag}
+            </a>
+          ))
+        }
+      </div>
+    </header>
+    <div class="prose">
+      <Content components={{ Quote }} />
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  import mediumZoom from 'medium-zoom';
+
+  mediumZoom('.prose img:not(a img)', { margin: 24 });
+
+  // 제목 옆 # 를 누르면 해당 위치 링크를 복사한다.
+  document.querySelectorAll<HTMLAnchorElement>('.heading-link').forEach((link) => {
+    link.addEventListener('click', async (event) => {
+      event.preventDefault();
+      const url = decodeURI(new URL(link.getAttribute('href') ?? '', location.href).href);
+      history.replaceState(null, '', link.hash);
+      await navigator.clipboard.writeText(url);
+      const icon = link.querySelector('.heading-link-icon');
+      if (!icon) return;
+      icon.textContent = '✓';
+      setTimeout(() => (icon.textContent = '#'), 1000);
+    });
+  });
+</script>
