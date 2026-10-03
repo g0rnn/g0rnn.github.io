@@ -1,0 +1,25 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getPosts, tagSlug } from '@/lib/posts';
+
+const posts = await getPosts();
+const counts = new Map<string, number>();
+for (const tag of posts.flatMap((post) => post.data.tags)) {
+  counts.set(tag, (counts.get(tag) ?? 0) + 1);
+}
+const tags = [...counts].sort(([a], [b]) => a.localeCompare(b));
+---
+
+<BaseLayout title="tags" description="태그 목록">
+  <h1 class="mt-0 mb-6 text-2xl">tags</h1>
+  <ul class="flex flex-wrap gap-x-4 gap-y-1">
+    {
+      tags.map(([tag, count]) => (
+        <li>
+          <a href={`/tags/${tagSlug(tag)}/`}>#{tag}</a>
+          <span class="text-sm text-muted"> ({count})</span>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

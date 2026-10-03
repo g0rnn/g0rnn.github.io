@@ -1,0 +1,14 @@
+---
+// 마크다운 `>` 인용문은 기본(card) 스타일이고, 다른 스타일이 필요할 때 이 컴포넌트를 쓴다.
+type QuoteType = 'card' | 'center' | 'minimal';
+
+interface Props {
+  type?: QuoteType;
+}
+
+const { type = 'card' } = Astro.props;
+---
+
+<blockquote class:list={[type !== 'card' && `quote-${type}`]}>
+  <slot />
+</blockquote>
