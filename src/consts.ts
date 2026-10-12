@@ -5,6 +5,7 @@ export const GITHUB_URL = 'https://github.com/g0rnn';
 
 export const NAV_LINKS = [
   { href: '/', label: 'posts' },
+  { href: '/portfolio/', label: 'portfolio' },
   { href: '/about/', label: 'about' },
   { href: '/rss.xml', label: 'rss' },
 ];
