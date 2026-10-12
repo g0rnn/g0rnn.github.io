@@ -1,0 +1,24 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  figures: { src: ImageMetadata; alt: string; caption?: string }[];
+}
+
+const { figures } = Astro.props;
+---
+
+{
+  figures.length > 0 && (
+    <div class="my-8 space-y-8">
+      {figures.map((figure) => (
+        <figure class="m-0">
+          {figure.caption && <figcaption class="mb-2 text-sm font-semibold text-muted">{figure.caption}</figcaption>}
+          <Image src={figure.src} alt={figure.alt} class="zoomable mx-auto rounded-md bg-white" />
+        </figure>
+      ))}
+    </div>
+  )
+}
+
